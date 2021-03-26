@@ -1,0 +1,60 @@
+# path or URL to sample sheet (tab-separated .txt format, columns: sample, condition, ...)
+samples: samples.txt
+
+
+# path or URL to sequencing unit sheet (TSV format, columns: sample, unit, fq1, fq2,
+# strandedness). Units are technical replicates (e.g. lanes, or resequencing of the
+# same biological sample). If the column "strandedness" is present (which is optional),
+# can be empty or has one of these values: none, yes or reverse. none is for unstranded
+# protocols, yes an reverse follow the nomenclature used in `htseq-count --reverse`
+# which is referenced in STAR manual section 7, "Counting number of reads per gene".
+units: units.txt
+
+# https://bioinformatics.cvr.ac.uk/illumina-adapter-and-primer-sequences/
+# https://support.illumina.com/bulletins/2016/04/adapter-trimming-why-are-adapter-sequences-trimmed-from-only-the--ends-of-reads.html
+# https://www.neb.com/-/media/nebus/files/manuals/manuale7335.pdf?la=en&rev=e5b42b9bcb6b4d3db6d037f460677b84&hash=42A530FAD9A261341C840418A88BD08F67923CE7
+trimming:
+  # skip trimming: false or true
+  skip: false
+  # the sequencing adapter
+  adapter:
+      CTGACCTCAAGTCTGCACACGAGAAGGCTAG
+
+ref:
+  # the STAR index
+  index: "/grid/meyer/home/common/public/annotations/genome/human/GRCh38/STARINDEX"
+  #index: "/grid/meyer/home/common/public/annotations/genome/mouse/GRCm38/STARINDEX"
+  # gtf file with transcripts
+  annotation: "/grid/meyer/home/common/public/annotations/genome/human/GRCh38/human.GRCh38.gtf"
+  #annotation: "/grid/meyer/home/common/public/annotations/genome/mouse/GRCm38/mouse.GRCm38.gtf"
+
+pca:
+  # columns of sample sheet to use for PCA
+  fill: "condition"
+  color: ""
+  shape: ""
+  labels:
+    # columns of sample sheet to use for PCA
+    - combined
+
+diffexp:
+  # overall design for deseq2
+  design: " ~ condition + time + condition:time"
+  # organism name for annotation hub
+  organism: "mouse"
+  # contrasts for the deseq2 results method
+  contrasts:
+    aa-vs-control:
+      - aa
+      - control
+    pge2-vs-control:
+      - pge2
+      - control
+    aa-vs-pge2:
+      - aa
+      - pge2
+
+params:
+  star: ""
+  cutadapt-se: ""
+  cutadapt-pe: ""
